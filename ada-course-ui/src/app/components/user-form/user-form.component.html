@@ -1,0 +1,130 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
+      Cadastrar novo estudante
+    </h1>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <!-- Success Message -->
+      @if (successMessage) {
+        <div class="mb-4 p-4 bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-200 rounded">
+          <p class="font-semibold">✓ Sucesso!</p>
+          <p>{{ successMessage }}</p>
+        </div>
+      }
+
+      <!-- Error Message -->
+      @if (errorMessage) {
+        <div class="mb-4 p-4 bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-200 rounded">
+          <p class="font-semibold">✗ Erro</p>
+          <p>{{ errorMessage }}</p>
+        </div>
+      }
+
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <!-- Name Field -->
+        <div class="mb-4">
+          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Nome Completo *
+          </label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            placeholder="Digite o nome completo"
+            [class.border-red-500]="name?.invalid && name?.touched"
+          />
+          @if (name?.invalid && name?.touched) {
+            <div class="mt-1 text-sm text-red-600 dark:text-red-400">
+              @if (name?.errors?.['required']) {
+                <p>Nome é obrigatório</p>
+              }
+              @if (name?.errors?.['minlength']) {
+                <p>Nome deve ter no mínimo 3 caracteres</p>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Email Field -->
+        <div class="mb-6">
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Email *
+          </label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            placeholder="exemplo@ada.tech"
+            [class.border-red-500]="email?.invalid && email?.touched"
+          />
+          @if (email?.invalid && email?.touched) {
+            <div class="mt-1 text-sm text-red-600 dark:text-red-400">
+              @if (email?.errors?.['required']) {
+                <p>Email é obrigatório</p>
+              }
+              @if (email?.errors?.['email']) {
+                <p>Email inválido</p>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Password Field -->
+        <!-- <div class="mb-6">
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Senha *
+          </label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            placeholder="Digite sua melhor senha"
+            [class.border-red-500]="password?.invalid && password?.touched"
+          />
+          @if (password?.invalid && password?.touched) {
+            <div class="mt-1 text-sm text-red-600 dark:text-red-400">
+              @if (password?.errors?.['required']) {
+                <p>Senha é obrigatória</p>
+              }
+              @if (password?.errors?.['minlength']) {
+                <p>Senha deve ter no mínimo 6 caracteres</p>
+              }
+            </div>
+          }
+        </div> -->
+
+        <!-- Info Box -->
+        <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg">
+          <p class="text-sm text-blue-800 dark:text-blue-200">
+            <strong>💰 Saldo Inicial:</strong> Todo novo usuário recebe 100 Quarkus Coins automaticamente!
+          </p>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex gap-4">
+          <button
+            type="submit"
+            [disabled]="userForm.invalid || isSubmitting"
+            class="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+          >
+            @if (isSubmitting) {
+              <span>Cadastrando...</span>
+            } @else {
+              <span>Cadastrar Usuário</span>
+            }
+          </button>
+
+          <a
+            routerLink="/transfer"
+            class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-center"
+          >
+            Cancelar
+          </a>
+        </div>
+      </form>
+    </div>
+</div>
