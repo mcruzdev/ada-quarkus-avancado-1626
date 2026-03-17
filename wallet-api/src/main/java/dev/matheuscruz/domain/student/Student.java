@@ -1,5 +1,6 @@
 package dev.matheuscruz.domain.student;
 
+import dev.matheuscruz.domain.exception.InsufficientBalanceException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -60,5 +61,9 @@ public class Student {
         this.quarkusCoins = currentBalance.subtract(amount);
         receiverStudent.quarkusCoins =
                 receiverStudent.quarkusCoins.add(amount);
+    }
+
+    public void addBonus(BigDecimal bonus) {
+        this.quarkusCoins = this.quarkusCoins.add(bonus);
     }
 }

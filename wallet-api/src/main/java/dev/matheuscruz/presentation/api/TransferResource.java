@@ -1,8 +1,9 @@
 package dev.matheuscruz.presentation.api;
 
-import dev.matheuscruz.domain.student.InsufficientBalanceException;
+import dev.matheuscruz.domain.exception.EntityNotFoundException;
+import dev.matheuscruz.domain.exception.InsufficientBalanceException;
 import dev.matheuscruz.domain.student.StudentService;
-import dev.matheuscruz.domain.student.UserNotFoundException;
+import io.quarkus.logging.Log;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
@@ -22,21 +23,17 @@ public class TransferResource {
     }
 
     @POST
-    public Response transfer(StudentResource.TransferBetweenStudentsRequest request) {
-        try {
-            this.studentService.transferCoins(request.from(), request.to(), request.amount());
-        } catch (InsufficientBalanceException e) {
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .entity(Map.of("message", e.getMessage()))
-                    .build();
-        } catch (UserNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("message", e.getMessage()))
-                    .build();
-        } catch (Exception e) {
-            // RuntimeException é uma Exception
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
+    public Response transfer(StudentResource.TransferBetweenStudentsRequest request) throws Exception {
+        throw new Exception("hello figura");
+//        this.studentService.transferCoins(request.from(), request.to(), request.amount());
+//        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/bonifications")
+    public Response addBonus(StudentResource.AddBonusRequest request) {
+        Log.info("Request to add bonification received: " + request);
+        this.studentService.addBonus(request.email());
         return Response.ok().build();
     }
 }

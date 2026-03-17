@@ -1,4 +1,4 @@
-package dev.matheuscruz.domain.student;
+package dev.matheuscruz.domain.exception;
 
 public class InsufficientBalanceException extends RuntimeException {
     public InsufficientBalanceException(String message) {
