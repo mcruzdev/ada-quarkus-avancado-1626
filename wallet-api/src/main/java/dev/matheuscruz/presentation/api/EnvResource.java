@@ -14,7 +14,8 @@ public class EnvResource {
 
     @GET
     public Uni<String> env() {
-        Log.info("EnvResource");
+//        service -> repository .....
+        Log.info("EnvResource: {path}");
         return Uni.createFrom()
                 .item("Executing app with: " + appEnv);
     }

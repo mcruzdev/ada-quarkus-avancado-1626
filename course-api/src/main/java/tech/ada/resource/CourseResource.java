@@ -1,6 +1,7 @@
 package tech.ada.resource;
 
 import io.quarkus.logging.Log;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import tech.ada.CourseService;
 import tech.ada.dto.CourseResponse;
 import tech.ada.dto.CourseRequest;
 import tech.ada.dto.CreateLessonRequest;
@@ -28,17 +30,19 @@ import tech.ada.model.Lesson;
 @Path("/courses")
 public class CourseResource {
 
+    @Inject
+    CourseService courseService;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
     public Response createCourse(@Valid CourseRequest request) {
 
         Course course = new Course(request.name());
 
-        course.persist();
+        Course courseCreated = courseService.createCourse(course);
 
-        URI location = URI.create("/courses/" + course.id);
+        URI location = URI.create("/courses/" + courseCreated.id);
 
         CourseResponse payload = new CourseResponse(course.id, course.getName(), List.of());
 
