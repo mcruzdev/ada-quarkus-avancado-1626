@@ -15,11 +15,10 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import tech.ada.CourseService;
+import tech.ada.service.CourseService;
 import tech.ada.dto.CourseResponse;
 import tech.ada.dto.CourseRequest;
 import tech.ada.dto.CreateLessonRequest;

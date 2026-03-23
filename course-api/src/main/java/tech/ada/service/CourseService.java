@@ -1,12 +1,4 @@
-package tech.ada;
-//
-//import io.micrometer.core.annotation.Timed;
-//import io.micrometer.core.instrument.Counter;
-//import io.micrometer.core.instrument.MeterRegistry;
-//import io.micrometer.core.instrument.Timer;
-//import io.opentelemetry.api.metrics.MeterBuilder;
-//import io.opentelemetry.api.trace.SpanKind;
-//import io.opentelemetry.instrumentation.annotations.WithSpan;
+package tech.ada.service;
 
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Counter;
@@ -22,7 +14,6 @@ import tech.ada.model.Course;
 @ApplicationScoped
 public class CourseService {
 
-//    @Inject
     final MeterRegistry meterRegistry;
 
     public CourseService(MeterRegistry meterRegistry) {
@@ -48,8 +39,8 @@ public class CourseService {
 
             Counter.builder("course.with.quarkus")
                     .tag("class", "1626")
-                            .register(meterRegistry)
-                                    .increment();
+                    .register(meterRegistry)
+                    .increment();
 
 
             meterRegistry.counter("course.with.quarkus").increment();
