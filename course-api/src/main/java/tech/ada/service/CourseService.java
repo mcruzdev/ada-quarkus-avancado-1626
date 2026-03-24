@@ -1,4 +1,4 @@
-package tech.ada;
+package tech.ada.service;
 //
 //import io.micrometer.core.annotation.Timed;
 //import io.micrometer.core.instrument.Counter;

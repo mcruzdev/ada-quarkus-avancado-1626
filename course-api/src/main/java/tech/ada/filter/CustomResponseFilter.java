@@ -2,6 +2,7 @@ package tech.ada.filter;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
@@ -10,6 +11,7 @@ import jakarta.ws.rs.ext.Provider;
 
 // Client HTTP -> Quarkus -> Request Filter -> Resource -> Response Filter
 @Provider
+@Priority(100) // define a ordem de execução dos filtros, quanto menor o número, maior a prioridade
 public class CustomResponseFilter implements ContainerResponseFilter {
 
     @Inject

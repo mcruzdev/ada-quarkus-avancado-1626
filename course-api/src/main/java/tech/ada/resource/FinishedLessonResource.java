@@ -1,7 +1,10 @@
 package tech.ada.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.RestrictedBindingSource;
 import io.quarkus.logging.Log;
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.POST;
@@ -15,6 +18,7 @@ import tech.ada.model.FinishedLesson;
 import java.net.URI;
 import java.util.Map;
 
+@Authenticated // somente tokens validos
 @Path("/finished-lessons")
 public class FinishedLessonResource {
 
