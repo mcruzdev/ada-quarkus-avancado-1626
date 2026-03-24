@@ -82,6 +82,24 @@ export class CourseService {
     return course?.lessons || [];
   }
 
+  loadLessonsByCourseId(courseId: number): Observable<Lesson[]> {
+    return this.http.get<Lesson[]>(`${this.apiUrl}/courses/${courseId}/lessons`).pipe(
+      tap(lessons => {
+        this.courses.update(courses => {
+          return courses.map(c => {
+            if (c.id === courseId) {
+              return {
+                ...c,
+                lessons
+              };
+            }
+            return c;
+          });
+        });
+      })
+    );
+  }
+
   createLesson(courseId: number, dto: CreateLessonDto): Observable<Lesson> {
     return this.http.post<Lesson>(`${this.apiUrl}/courses/${courseId}/lessons`, dto).pipe(
       tap(newLesson => {

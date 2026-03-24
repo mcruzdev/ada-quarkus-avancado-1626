@@ -45,12 +45,34 @@ export class CourseDetailComponent {
     this.courseService.loadCourseById(id).subscribe({
       next: (course) => {
         this.course.set(course);
-        this.isLoading.set(false);
+        // Load lessons separately from the new endpoint
+        this.loadLessons(id);
       },
       error: (error) => {
         this.isLoading.set(false);
         this.errorMessage.set('Failed to load course. Please try again.');
         console.error('Error loading course:', error);
+      }
+    });
+  }
+
+  private loadLessons(courseId: number): void {
+    this.courseService.loadLessonsByCourseId(courseId).subscribe({
+      next: (lessons) => {
+        // Update the course with the loaded lessons
+        const currentCourse = this.course();
+        if (currentCourse) {
+          this.course.set({
+            ...currentCourse,
+            lessons
+          });
+        }
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        this.errorMessage.set('Failed to load lessons. Please try again.');
+        console.error('Error loading lessons:', error);
       }
     });
   }

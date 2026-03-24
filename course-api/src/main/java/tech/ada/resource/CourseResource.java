@@ -30,7 +30,7 @@ import tech.ada.dto.LessonResponse;
 import tech.ada.model.Course;
 import tech.ada.model.Lesson;
 
-@RolesAllowed("ADMIN")
+@RolesAllowed("admin")
 @Path("/courses")
 public class CourseResource {
 
@@ -100,7 +100,7 @@ public class CourseResource {
     }
 
     @GET
-    @RolesAllowed({"USER"})
+    @RolesAllowed({"user"})
     public Response getCourses() {
         List<Course> courses = Course.listAll();
         List<CourseResponse> response = courses
@@ -111,7 +111,7 @@ public class CourseResource {
         return Response.ok(response).build();
     }
 
-    @RolesAllowed({"USER"})
+    @RolesAllowed({"user"})
     @GET
     @Path("/{id}")
     public Response getCourseById(@PathParam("id") Long id) {
@@ -151,7 +151,7 @@ public class CourseResource {
     }
 
 
-    @RolesAllowed({"USER"})
+    @RolesAllowed({"user"})
     @GET
     @Path("/{id}/lessons")
     public Response getLessonsByCourseId(@PathParam("id") Long id) {
