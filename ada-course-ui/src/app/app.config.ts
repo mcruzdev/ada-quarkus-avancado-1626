@@ -5,19 +5,17 @@ import { provideKeycloak } from 'keycloak-angular';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { keycloakConfig } from './config/auth.config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideKeycloak({
-      config: {
-        url: 'http://localhost:40137',
-        realm: 'quarkus',
-        clientId: 'course-ui'
-      },
+      config: keycloakConfig,
       initOptions: {
-        onLoad: 'login-required',
-        checkLoginIframe: false
+        onLoad: 'check-sso',
+        checkLoginIframe: false,
+        pkceMethod: 'S256'
       }
     }),
     provideRouter(routes),
