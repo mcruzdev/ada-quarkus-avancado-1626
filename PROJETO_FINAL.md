@@ -6,7 +6,6 @@ Será necessário a criação de uma nova entidade que vai representar um usuár
 
 Você pode utilizar o [Quarkus Security JPA](https://quarkus.io/guides/security-jpa#jakarta-persistence-entity-specification) para te ajudar.
 
-```
 ```mermaid
 erDiagram
     User {
