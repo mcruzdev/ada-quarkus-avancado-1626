@@ -15,17 +15,20 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import tech.ada.dto.CourseRequest;
-import tech.ada.dto.CourseResponse;
-import tech.ada.dto.CreateLessonRequest;
-import tech.ada.dto.LessonResponse;
-import tech.ada.model.Course;
-import tech.ada.model.Lesson;
-import tech.ada.service.CourseService;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+
+import org.eclipse.microprofile.jwt.Claims;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import tech.ada.service.CourseService;
+import tech.ada.dto.CourseResponse;
+import tech.ada.dto.CourseRequest;
+import tech.ada.dto.CreateLessonRequest;
+import tech.ada.dto.LessonResponse;
+import tech.ada.model.Course;
+import tech.ada.model.Lesson;
 
 @RolesAllowed("ADMIN")
 @Path("/courses")
@@ -33,6 +36,9 @@ public class CourseResource {
 
     @Inject
     CourseService courseService;
+
+    @Inject
+    JsonWebToken jwt;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -80,12 +86,21 @@ public class CourseResource {
     @Path("/{id}")
     @Transactional
     public Response deleteCourse(@PathParam("id") Long id) {
+        String rawToken = jwt.getRawToken();
+        System.out.println("Raw token: " + rawToken);
+        Optional<Object> claim = jwt.claim(Claims.sub);
+        if (claim.isPresent()) {
+            System.out.println("sub" + claim.get());
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
         Course.deleteById(id);
         return Response.noContent().build();
     }
 
     @GET
-    @RolesAllowed({"user"})
+    @RolesAllowed({"USER"})
     public Response getCourses() {
         List<Course> courses = Course.listAll();
         List<CourseResponse> response = courses
@@ -136,7 +151,7 @@ public class CourseResource {
     }
 
 
-    @RolesAllowed({"user"})
+    @RolesAllowed({"USER"})
     @GET
     @Path("/{id}/lessons")
     public Response getLessonsByCourseId(@PathParam("id") Long id) {

@@ -72,12 +72,23 @@
             <artifactId>quarkus-observability-devservices-lgtm</artifactId>
             <scope>provided</scope>
         </dependency>
+<!--        Read JWT, Validate, Filters, Security, Public key pair in Dev Mode-->
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-oidc</artifactId>
+            <artifactId>quarkus-smallrye-jwt</artifactId>
+        </dependency>
+<!--        Build JWT-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-jwt-build</artifactId>
         </dependency>
 
-        <!--        test -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-security-jpa</artifactId>
+        </dependency>
+<!--        test -->
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
