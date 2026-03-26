@@ -1,6 +1,7 @@
 package tech.ada.resource;
 
 import io.quarkus.logging.Log;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -26,8 +27,9 @@ import tech.ada.service.CourseService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-@RolesAllowed("ADMIN")
+@PermitAll
 @Path("/courses")
 public class CourseResource {
 
@@ -85,18 +87,23 @@ public class CourseResource {
     }
 
     @GET
-    @RolesAllowed({"user"})
+//    @RolesAllowed({"user"})
     public Response getCourses() {
-        List<Course> courses = Course.listAll();
+        List<Course> courses = courseService.listAll();
+
         List<CourseResponse> response = courses
                 .stream()
                 .map((Course c) -> new CourseResponse(c.id, c.getName(), List.of()))
                 .toList();
 
+//        String anything = courseService.roles("anything");
+
+//        System.out.println("Roles: " + anything);
+
         return Response.ok(response).build();
     }
 
-    @RolesAllowed({"USER"})
+//    @RolesAllowed({"USER"})
     @GET
     @Path("/{id}")
     public Response getCourseById(@PathParam("id") Long id) {
