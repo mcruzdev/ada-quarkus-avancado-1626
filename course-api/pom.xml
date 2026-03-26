@@ -76,6 +76,15 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-oidc</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.quarkus</groupId>-->
+<!--            <artifactId>quarkus-cache</artifactId> &lt;!&ndash; caffeine cache &ndash;&gt;-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-redis-cache</artifactId>
+        </dependency>
 
         <!--        test -->
         <dependency>
