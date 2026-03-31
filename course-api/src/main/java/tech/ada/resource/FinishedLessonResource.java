@@ -3,6 +3,7 @@ package tech.ada.resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.RestrictedBindingSource;
 import io.quarkus.logging.Log;
+import io.quarkus.narayana.jta.QuarkusTransaction;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
@@ -13,12 +14,14 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import tech.ada.client.WalletApi;
+import tech.ada.dto.FinishedLessonMessage;
+import tech.ada.messaging.FinishedLessonPublisher;
 import tech.ada.model.FinishedLesson;
 
 import java.net.URI;
 import java.util.Map;
 
-@Authenticated // somente tokens validos
+//@Authenticated // somente tokens validos
 @Path("/finished-lessons")
 public class FinishedLessonResource {
 
@@ -31,6 +34,9 @@ public class FinishedLessonResource {
     @Inject
     @RestClient
     WalletApi walletApi;
+
+    @Inject
+    FinishedLessonPublisher publisher;
 
     @ConfigProperty(name = "wallet.api.base.url")
     String walletBaseUrl;
@@ -46,22 +52,45 @@ public class FinishedLessonResource {
     }
 
     @POST
-    @Transactional
     public Response finishedLesson(FinishedLessonRequest req) {
 
         FinishedLesson finishedLesson = new FinishedLesson(req.email(), req.lessonId());
 
         // Validar se existe uma Lesson
 
-        finishedLesson.persist();
-
         Log.info("Aws Secret is: " + awsSecret);
 
-        var byEmail = walletApi.findByEmail("figura123@email.com");
 
-        WalletApi.GetStudentResponse response = byEmail.readEntity(WalletApi.GetStudentResponse.class);
+        FinishedLessonMessage finishedLessonMessage = new FinishedLessonMessage(
+                req.email(),
+                req.lessonId().intValue()
+        );
 
-        Log.info("Response body: " + response);
+        // finished lesson
+        //                    new Outbox(finishedLessonMessage).persist(); // evento
+        QuarkusTransaction.requiringNew()
+                .run(finishedLesson::persist);
+            //ou tudo é escrito ou nada é escrito
+        // ok
+
+
+        publisher.emitFinishedLessonMessage(finishedLessonMessage); // ok
+
+//        Outbox.delete(finishedLessonMessage); // deletar a linha no banco de dados
+        //
+
+        // duas escritas
+        // banco de dados
+
+
+        // envio para o kafka
+
+
+//        var byEmail = walletApi.findByEmail("figura123@email.com");
+
+//        WalletApi.GetStudentResponse response = byEmail.readEntity(WalletApi.GetStudentResponse.class);
+
+//        Log.info("Response body: " + response);
 
 //        Response walletApiResponse = walletApi.addBonification(
 //                new WalletApi.AddBonusRequest(req.email())

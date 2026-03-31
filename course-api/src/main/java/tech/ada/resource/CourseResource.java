@@ -1,6 +1,9 @@
 package tech.ada.resource;
 
 import io.quarkus.logging.Log;
+import io.smallrye.common.annotation.Blocking;
+import io.smallrye.common.annotation.NonBlocking;
+import io.smallrye.mutiny.Uni;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -28,6 +31,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 @PermitAll
 @Path("/courses")
@@ -106,13 +110,16 @@ public class CourseResource {
 //    @RolesAllowed({"USER"})
     @GET
     @Path("/{id}")
-    public Response getCourseById(@PathParam("id") Long id) {
-        Log.info("Getting course by ID: " + id);
-        Course course = Course.findById(id);
-        if (course == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(new CourseResponse(course.id, course.getName(), List.of())).build();
+    @Blocking
+    public Uni<Response> getCourseById(@PathParam("id") Long id) {
+        return Uni.createFrom().item(() -> {
+            Log.info("Getting course by ID: " + id);
+            Course course = Course.findById(id); // blocking
+            if (course == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            return Response.ok(new CourseResponse(course.id, course.getName(), List.of())).build();
+        });
     }
 
     @POST
@@ -120,7 +127,6 @@ public class CourseResource {
     @Path("/{id}/lessons")
     @Transactional
     public Response createLesson(@PathParam("id") Long id, @Valid CreateLessonRequest request) {
-
         Course course = Course.findById(id);
         if (course == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
