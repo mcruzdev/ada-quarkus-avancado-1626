@@ -106,13 +106,16 @@ public class CourseResource {
 //    @RolesAllowed({"USER"})
     @GET
     @Path("/{id}")
-    public Response getCourseById(@PathParam("id") Long id) {
-        Log.info("Getting course by ID: " + id);
-        Course course = Course.findById(id);
-        if (course == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(new CourseResponse(course.id, course.getName(), List.of())).build();
+    @Blocking
+    public Uni<Response> getCourseById(@PathParam("id") Long id) {
+        return Uni.createFrom().item(() -> {
+            Log.info("Getting course by ID: " + id);
+            Course course = Course.findById(id); // blocking
+            if (course == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            return Response.ok(new CourseResponse(course.id, course.getName(), List.of())).build();
+        });
     }
 
     @POST
@@ -120,7 +123,6 @@ public class CourseResource {
     @Path("/{id}/lessons")
     @Transactional
     public Response createLesson(@PathParam("id") Long id, @Valid CreateLessonRequest request) {
-
         Course course = Course.findById(id);
         if (course == null) {
             return Response.status(Response.Status.NOT_FOUND).build();

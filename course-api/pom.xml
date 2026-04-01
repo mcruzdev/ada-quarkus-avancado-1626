@@ -47,6 +47,15 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-mysql</artifactId> <!-- JDBC -->
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.quarkus</groupId>-->
+<!--            <artifactId>quarkus-reactive-mysql-client</artifactId> MySQL REACTIVE -->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.quarkus</groupId>-->
+<!--            <artifactId>quarkus-messaging-kafka</artifactId>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId> <!-- BEAN VALIDATION -->
@@ -84,6 +93,12 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-redis-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkiverse.langchain4j</groupId>
+            <artifactId>quarkus-langchain4j-ollama</artifactId>
+            <version>1.8.4</version>
         </dependency>
 
         <!--        test -->
